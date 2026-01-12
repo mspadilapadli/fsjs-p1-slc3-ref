@@ -1,0 +1,23 @@
+[
+    {
+        "title": "Phsycology of Money",
+        "isbn": "isbnphsycologyofmoney",
+        "price": 112000,
+        "stock": 5,
+        "AuthorId": 1
+    },
+    {
+        "title": "I Hate Diet",
+        "isbn": "isbnDiet",
+        "price": 192000,
+        "stock": 3,
+        "AuthorId": 2
+    },
+    {
+        "title": "Filosofi Teras ",
+        "isbn": "isbnfilosifiteras",
+        "price": 92000,
+        "stock": 0,
+        "AuthorId": 1
+    }
+]
