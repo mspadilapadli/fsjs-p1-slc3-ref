@@ -1,4 +1,5 @@
 const { Author, Book } = require("../models");
+const { Op } = require("sequelize");
 class Controller {
     static async readAuthors(req, res) {
         try {
@@ -11,6 +12,15 @@ class Controller {
 
     static async readBooks(req, res) {
         try {
+            const books = await Book.findAll({
+                include: {
+                    model: Author,
+                    attributes: ["name"],
+                },
+                order: [["title", "ASC"]],
+            });
+            // res.send(books);
+            res.render("books", { books });
         } catch (error) {
             res.send(error);
         }
@@ -23,7 +33,15 @@ class Controller {
     }
     static async buyBook(req, res) {
         try {
+            const { id } = req.params;
+            //* decrement with instance method
+            const book = await Book.findByPk(id);
+            if (!book || book < 0) throw new Error("Stock sold out");
+            await book.decrement("stock", { by: 1 });
+
+            res.redirect("/books");
         } catch (error) {
+            console.log(error);
             res.send(error);
         }
     }
