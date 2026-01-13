@@ -1,3 +1,4 @@
+const helper = require("../helper");
 const { Author, Book } = require("../models");
 const { Op } = require("sequelize");
 class Controller {
@@ -93,6 +94,17 @@ class Controller {
                 "/books?success=Data added successfully&display=success"
             );
         } catch (error) {
+            const errors = helper.formatValdiateErrors(error);
+            if (errors) {
+                let authors = await Author.findAll();
+                return res.render("show-form", {
+                    book: req.body,
+                    authors,
+                    action: `/books/add`,
+                    isEdit: false,
+                    errors,
+                });
+            }
             res.send(error);
         }
     }
