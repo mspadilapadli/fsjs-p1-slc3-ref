@@ -23,7 +23,7 @@ class Controller {
                 order: [["title", "ASC"]],
             });
             // res.send(books);
-            res.render("books", { books, success, display });
+            res.render("books", { books, success, display, mode: "available" });
         } catch (error) {
             res.send(error);
         }
@@ -40,7 +40,7 @@ class Controller {
                 order: [["title", "ASC"]],
             });
             // res.send(books);
-            res.render("books", { books, success, display });
+            res.render("books", { books, success, display, mode: "empty" });
         } catch (error) {
             res.send(error);
         }
@@ -133,6 +133,13 @@ class Controller {
     }
     static async deleteBook(req, res) {
         try {
+            const { id } = req.params;
+            const foundBook = await Book.findByPk(id);
+            if (!foundBook) throw new Error(`Data not found!`);
+            await foundBook.destroy();
+            res.redirect(
+                `/books/emptyList?success=${foundBook.title} book is deleted&display=danger`
+            );
         } catch (error) {
             res.send(error);
         }
