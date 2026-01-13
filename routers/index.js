@@ -11,7 +11,7 @@ router.get("/books/emptyList", Controller.readEmtyBooks);
 router.get("/books/buy/:id", Controller.buyBook);
 
 //add
-router.get("/books/add", Controller.showFormAdd);
+router.get("/books/add", Controller.showForm);
 router.post("/books/add", Controller.postAddBook);
 
 //edit
