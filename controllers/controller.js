@@ -30,6 +30,17 @@ class Controller {
     }
     static async readEmtyBooks(req, res) {
         try {
+            const { success, display } = req.query;
+            const books = await Book.findAll({
+                where: { stock: 0 },
+                include: {
+                    model: Author,
+                    attributes: ["name"],
+                },
+                order: [["title", "ASC"]],
+            });
+            // res.send(books);
+            res.render("books", { books, success, display });
         } catch (error) {
             res.send(error);
         }

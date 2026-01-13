@@ -68,7 +68,15 @@
                               <%= book.Author.name%>
                            </td>
                            <td>
-                              <a href="books/buy/<%= book.id %>" class="btn btn-outline-info">Buy</a>
+                              <% if (book.stock> 0) { %>
+                                 <!-- available -->
+                                 <a href="books/buy/<%= book.id %>" class="btn btn-outline-info">Buy</a>
+                                 <% } else { %>
+                                    <!-- empty -->
+                                    <a href="/books/restock/<%= book.id %>" class="btn btn-info">Restock</a>
+                                    <a href="/books/delete/<%= book.id %>" class="btn btn-danger">Delete</a>
+
+                                    <% } %>
                            </td>
                         </tr>
                         <% }); %>
