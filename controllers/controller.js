@@ -35,9 +35,22 @@ class Controller {
         try {
             const { id } = req.params;
             //* decrement with instance method
-            const book = await Book.findByPk(id);
-            if (!book || book < 0) throw new Error("Stock sold out");
-            await book.decrement("stock", { by: 1 });
+            // const book = await Book.findByPk(id);
+            // if (!book || book < 0) throw new Error("Stock sold out");
+            // await book.decrement("stock", { by: 1 });
+
+            //* decrement with static Method
+            const buy = await Book.decrement(
+                { stock: 1 },
+                {
+                    where: { id, stock: { [Op.gt]: 0 } },
+                    returning: false, //tidak mengembalikan row data yang di update
+                }
+            );
+            //buy[0][1] : jumlah row yang ter-update
+            if (buy[0][1] === 0) {
+                throw new Error("Out if stock");
+            }
 
             res.redirect("/books");
         } catch (error) {
