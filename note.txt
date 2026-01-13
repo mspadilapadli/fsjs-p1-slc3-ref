@@ -1,0 +1,4 @@
+npx sequelize model:create --name Author --attributes name:string,age:integer,gender:string
+npx sequelize model:create --name Book --attributes title:string,isbn:string,price:integer,stock:integer,AuthorId:integer
+npx sequelize seed:create --name authors-seed
+npx sequelize seed:create --name books-seed

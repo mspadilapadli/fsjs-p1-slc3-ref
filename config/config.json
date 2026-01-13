@@ -2,7 +2,7 @@
     "development": {
         "username": "postgres",
         "password": "admin65",
-        "database": "p1slc3-mini_store-ref",
+        "database": "p1w4slc3-mini_store-ref",
         "host": "127.0.0.1",
         "dialect": "postgres"
     },
