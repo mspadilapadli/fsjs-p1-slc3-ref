@@ -20,36 +20,57 @@
 
                     <div class="col mb-3">
                         <label class="form-label">Title
-
+                            <% if (errors.title) { %>
+                                <small class="text-danger ms-2">
+                                    *<%= errors.title %>
+                                </small>
+                                <% } %>
                         </label>
-                        <input type="text" class="form-control" name="title">
+                        <input type="text" class="form-control <%= errors.title ? 'is-invalid' : '' %>" name="title">
                     </div>
                     <div class="col mb-3">
                         <label class="form-label">ISBN
-
+                            <% if (errors.isbn) { %>
+                                <small class="text-danger ms-2">
+                                    *<%= errors.isbn %>
+                                </small>
+                                <% } %>
                         </label>
-                        <input type="text" class="form-control" name="isbn">
+                        <input type="text" class="form-control <%= errors.isbn ? 'is-invalid' : '' %>" name="isbn">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Stock
-
+                        <% if (errors.stock) { %>
+                            <small class="text-danger ms-2">
+                                *<%= errors.stock %>
+                            </small>
+                            <% } %>
                     </label>
-                    <input type="number" class="form-control" name="stock">
+                    <input type="number" class="form-control <%= errors.stock ? 'is-invalid' : '' %>" name="stock">
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Price
-
+                        <% if (errors.price) { %>
+                            <small class="text-danger ms-2">
+                                *<%= errors.price %>
+                            </small>
+                            <% } %>
                     </label>
-                    <input type="number" class="form-control" name="price">
+                    <input type="number" class="form-control <%= errors.price ? 'is-invalid' : '' %>" name="price">
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Author
+                        <% if (errors.AuthorId) { %>
+                            <small class="text-danger ms-2">
+                                *<%= errors.AuthorId %>
+                            </small>
+                            <% } %>
                     </label>
-                    <select class="form-select" name="AuthorId">
+                    <select class="form-select <%= errors.AuthorId ? 'is-invalid' : '' %>" name="AuthorId">
                         <option value="" hidden> Choose the author</option>
                         <% authors.forEach((author)=>{ %>
                             <option value="<%= author.id %>">

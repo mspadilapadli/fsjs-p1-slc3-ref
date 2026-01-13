@@ -19,10 +19,10 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 validate: {
                     notNull: {
-                        msg: `Title is required`,
+                        msg: `Title cannot be null`,
                     },
                     notEmpty: {
-                        msg: `Title cannot empty`,
+                        msg: `Title is required`,
                     },
                 },
             },
@@ -31,10 +31,10 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 validate: {
                     notNull: {
-                        msg: `ISBN is required`,
+                        msg: `ISBN cannot be null`,
                     },
                     notEmpty: {
-                        msg: `ISBN cannot empty`,
+                        msg: `ISBN is required`,
                     },
                 },
             },
@@ -43,13 +43,13 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 validate: {
                     notNull: {
-                        msg: `Price is required`,
+                        msg: `Price cannot be null`,
                     },
-                    notEmpty: {
-                        msg: `Price cannot empty`,
+                    isInt: {
+                        msg: "Price must be an number",
                     },
                     min: {
-                        args: 0,
+                        args: [1],
                         msg: "Price must be more than 0",
                     },
                 },
@@ -59,13 +59,13 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 validate: {
                     notNull: {
-                        msg: `Stock is required`,
+                        msg: `Stock cannot be null`,
                     },
-                    notEmpty: {
-                        msg: `Stock cannot empty`,
+                    isInt: {
+                        msg: "Stock must be an number",
                     },
                     min: {
-                        args: 0,
+                        args: [1],
                         msg: "Stock must be more than 0",
                     },
                 },
@@ -75,10 +75,10 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 validate: {
                     notNull: {
-                        msg: `AuthorId is required`,
+                        msg: `AuthorId cannot be null`,
                     },
                     notEmpty: {
-                        msg: `AuthorId cannot empty`,
+                        msg: `AuthorId is required`,
                     },
                 },
             },
