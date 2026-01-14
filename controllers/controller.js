@@ -96,17 +96,22 @@ class Controller {
                 }
             );
             // buy[0][1] : jumlah row yang ter-update
-            [[affectedRow, count]] = buy;
+            const [[affectedRow, count]] = buy;
 
             if (count === 0) {
                 throw new Error("Out if stock");
             }
-            // const cuurentStock = affectedRow[0].stock;
+            const cuurentStock = affectedRow[0].stock;
+            const title = affectedRow[0].title;
 
-            res.redirect("/books");
+            cuurentStock
+                ? res.redirect("/books")
+                : res.redirect(
+                      `/books?success="${title}" is sold out&display=warning`
+                  );
         } catch (error) {
             console.log(error);
-            res.send(error);
+            // res.send(error);
         }
     }
     static async showForm(req, res) {
@@ -188,7 +193,7 @@ class Controller {
             const { id } = req.params;
             await Book.increment({ stock }, { where: { id } });
             res.redirect(
-                `/books/emptyList?success=Data stock is updated&display=info`
+                `/books/emptyList?success=Stock is updated&display=info`
             );
         } catch (error) {
             res.send(error);
@@ -201,7 +206,7 @@ class Controller {
             if (!foundBook) throw new Error(`Data not found!`);
             await foundBook.destroy();
             res.redirect(
-                `/books/emptyList?success=${foundBook.title} book is deleted&display=danger`
+                `/books/emptyList?success="${foundBook.title}" book is deleted&display=danger`
             );
         } catch (error) {
             res.send(error);
