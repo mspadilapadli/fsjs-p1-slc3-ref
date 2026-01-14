@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
             Author.hasMany(models.Book);
         }
-        static async getAuthorsWithTotalBooks() {
+        static async getAuthorsWithTotalBooks(where) {
             try {
                 const authors = await Author.findAll({
                     attributes: [
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
                         model: this.sequelize.models.Book,
                         attributes: [],
                     },
-
+                    where,
                     group: ["Author.id"],
                     order: [["id", "ASC"]],
                 });

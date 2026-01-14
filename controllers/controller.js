@@ -4,8 +4,16 @@ const { Op } = require("sequelize");
 class Controller {
     static async readAuthors(req, res) {
         try {
-            const authors = await Author.getAuthorsWithTotalBooks();
-            res.render("authors", { authors });
+            const { q } = req.query;
+            let where = {};
+            if (q) {
+                where.name = {
+                    [Op.iLike]: `%${q}%`,
+                };
+            }
+
+            const authors = await Author.getAuthorsWithTotalBooks(where);
+            res.render("authors", { authors, q });
         } catch (error) {
             console.log(error);
         }
@@ -14,8 +22,18 @@ class Controller {
     static async readBooks(req, res) {
         try {
             const { success, display } = req.query;
+            const { q } = req.query;
+            let where = { stock: { [Op.gt]: 0 } };
+
+            if (q) {
+                where.title = {
+                    [Op.iLike]: `%${q}%`,
+                };
+            }
+
+            console.log(where, "<<<<<<<<<<<<<<<<<<<<<<< query");
             const books = await Book.findAll({
-                where: { stock: { [Op.gt]: 0 } },
+                where,
                 include: {
                     model: Author,
                     attributes: ["name"],
@@ -23,7 +41,13 @@ class Controller {
                 order: [["title", "ASC"]],
             });
             // res.send(books);
-            res.render("books", { books, success, display, mode: "available" });
+            res.render("books", {
+                books,
+                success,
+                display,
+                mode: "available",
+                q,
+            });
         } catch (error) {
             res.send(error);
         }
@@ -31,8 +55,17 @@ class Controller {
     static async readEmtyBooks(req, res) {
         try {
             const { success, display } = req.query;
+
+            const { q } = req.query;
+            let where = { stock: 0 };
+
+            if (q) {
+                where.title = {
+                    [Op.iLike]: `%${q}%`,
+                };
+            }
             const books = await Book.findAll({
-                where: { stock: 0 },
+                where,
                 include: {
                     model: Author,
                     attributes: ["name"],
@@ -40,7 +73,7 @@ class Controller {
                 order: [["title", "ASC"]],
             });
             // res.send(books);
-            res.render("books", { books, success, display, mode: "empty" });
+            res.render("books", { books, success, display, mode: "empty", q });
         } catch (error) {
             res.send(error);
         }
@@ -49,22 +82,26 @@ class Controller {
         try {
             const { id } = req.params;
             //* decrement with instance method
-            const book = await Book.findByPk(id);
-            if (!book || book < 0) throw new Error("Stock sold out");
-            await book.decrement("stock", { by: 1 });
+            // const book = await Book.findByPk(id);
+            // if (!book || book < 0) throw new Error("Stock sold out");
+            // await book.decrement("stock", { by: 1 });
+            // const book = await Book.findByPk(id);
+            // const currentStock = book.stock;
 
             //* decrement with static Method
             const buy = await Book.decrement(
                 { stock: 1 },
                 {
                     where: { id, stock: { [Op.gt]: 0 } },
-                    returning: false, //tidak mengembalikan row data yang di update
                 }
             );
-            //buy[0][1] : jumlah row yang ter-update
-            if (buy[0][1] === 0) {
+            // buy[0][1] : jumlah row yang ter-update
+            [[affectedRow, count]] = buy;
+
+            if (count === 0) {
                 throw new Error("Out if stock");
             }
+            // const cuurentStock = affectedRow[0].stock;
 
             res.redirect("/books");
         } catch (error) {
