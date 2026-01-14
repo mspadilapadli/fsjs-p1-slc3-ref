@@ -4,10 +4,35 @@
 <head>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
-   <title>BetaMart</title>
+   <title>MiniStore</title>
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
+<div class="modal fade" id="restockModal" tabindex="-1">
+   <div class="modal-dialog">
+      <form method="POST" id="restockForm" class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Restock Book</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+         </div>
+
+         <div class="modal-body">
+            <p id="bookTitle" class="fw-bold"></p>
+
+            <div class="mb-3">
+               <label class="form-label">Jumlah Restock</label>
+               <input type="number" name="stock" class="form-control" min="1" required autofocus />
+            </div>
+         </div>
+
+         <div class="modal-footer">
+            <button type="submit" class="btn btn-info">
+               Update Stock
+            </button>
+         </div>
+      </form>
+   </div>
+</div>
 
 <body>
    <%-include("_navbar")%>
@@ -75,7 +100,12 @@
                                  <a href="books/buy/<%= book.id %>" class="btn btn-outline-info">Buy</a>
                                  <% } else { %>
                                     <!-- empty -->
-                                    <a href="/books/restock/<%= book.id %>" class="btn btn-info">Restock</a>
+                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                       data-bs-target="#restockModal" data-id="<%= book.id %>"
+                                       data-title="<%= book.title %>">
+                                       Restock
+                                    </button>
+
                                     <a href="/books/delete/<%= book.id %>" class="btn btn-danger">Delete</a>
 
                                     <% } %>
@@ -86,8 +116,24 @@
                </table>
       </div>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-         crossorigin="anonymous"></script>
+         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+         </script>
+
+      <script>
+         const restockModal = document.getElementById('restockModal')
+
+         restockModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget
+            const bookId = button.getAttribute('data-id')
+            const title = button.getAttribute('data-title')
+
+            const form = document.getElementById('restockForm')
+            const titleEl = document.getElementById('bookTitle')
+
+            form.action = `/books/restock/${bookId}`
+            titleEl.textContent = title
+         })
+      </script>
 </body>
 
 </html>

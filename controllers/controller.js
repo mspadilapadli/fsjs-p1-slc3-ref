@@ -121,12 +121,20 @@ class Controller {
     }
     static async showFormRestock(req, res) {
         try {
+            const { id } = req.params;
+            res.send("restock ni bro");
         } catch (error) {
             res.send(error);
         }
     }
     static async postRestock(req, res) {
         try {
+            const { stock } = req.body;
+            const { id } = req.params;
+            await Book.increment({ stock }, { where: { id } });
+            res.redirect(
+                `/books/emptyList?success=Data stock is updated&display=info`
+            );
         } catch (error) {
             res.send(error);
         }
