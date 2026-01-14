@@ -15,8 +15,9 @@ router.get("/books/add", Controller.showForm);
 router.post("/books/add", Controller.postAddBook);
 
 //edit
-router.get("/books/restock/:id", Controller.showFormRestock);
+router.get("/books/edit/:id", Controller.showForm);
 router.post("/books/restock/:id", Controller.postRestock);
+router.post("/books/edit/:id", Controller.postEdit);
 
 //delete
 router.get("/books/delete/:id", Controller.deleteBook);

@@ -82,7 +82,7 @@ class Controller {
 
             if (id) {
                 book = await Book.findByPk(id);
-                action = `/books/restock/${id}`;
+                action = `/books/edit/${id}`;
                 isEdit = true;
             }
             res.render("show-form", {
@@ -119,11 +119,29 @@ class Controller {
             res.send(error);
         }
     }
-    static async showFormRestock(req, res) {
+    static async postEdit(req, res) {
+        const { id } = req.params;
         try {
-            const { id } = req.params;
-            res.send("restock ni bro");
+            const { title, isbn, stock, price, AuthorId } = req.body;
+            const payload = { title, isbn, stock, price, AuthorId };
+            await Book.update(payload, {
+                where: { id },
+            });
+            res.redirect(
+                "/books?success=Data updated successfully&display=info"
+            );
         } catch (error) {
+            const errors = helper.formatValdiateErrors(error);
+            if (errors) {
+                let authors = await Author.findAll();
+                return res.render("show-form", {
+                    book: req.body,
+                    authors,
+                    action: `/books/edit/${id}`,
+                    isEdit: false,
+                    errors,
+                });
+            }
             res.send(error);
         }
     }
