@@ -40,7 +40,6 @@ class Controller {
                 },
                 order: [["title", "ASC"]],
             });
-            // res.send(books);
             res.render("books", {
                 books,
                 success,
@@ -72,7 +71,6 @@ class Controller {
                 },
                 order: [["title", "ASC"]],
             });
-            // res.send(books);
             res.render("books", { books, success, display, mode: "empty", q });
         } catch (error) {
             res.send(error);
@@ -110,8 +108,7 @@ class Controller {
                       `/books?success="${title}" is sold out&display=warning`
                   );
         } catch (error) {
-            console.log(error);
-            // res.send(error);
+            res.send(error);
         }
     }
     static async showForm(req, res) {
