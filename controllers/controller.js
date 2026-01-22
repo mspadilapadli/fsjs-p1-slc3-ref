@@ -21,7 +21,7 @@ class Controller {
 
     static async readBooks(req, res) {
         try {
-            const { success, display } = req.query;
+            const { status, display } = req.query;
             const { q } = req.query;
             let where = { stock: { [Op.gt]: 0 } };
 
@@ -31,7 +31,6 @@ class Controller {
                 };
             }
 
-            console.log(where, "<<<<<<<<<<<<<<<<<<<<<<< query");
             const books = await Book.findAll({
                 where,
                 include: {
@@ -42,7 +41,7 @@ class Controller {
             });
             res.render("books", {
                 books,
-                success,
+                status,
                 display,
                 mode: "available",
                 q,
@@ -53,7 +52,7 @@ class Controller {
     }
     static async readEmtyBooks(req, res) {
         try {
-            const { success, display } = req.query;
+            const { status, display } = req.query;
 
             const { q } = req.query;
             let where = { stock: 0 };
@@ -71,7 +70,7 @@ class Controller {
                 },
                 order: [["title", "ASC"]],
             });
-            res.render("books", { books, success, display, mode: "empty", q });
+            res.render("books", { books, status, display, mode: "empty", q });
         } catch (error) {
             res.send(error);
         }
@@ -91,7 +90,7 @@ class Controller {
                 { stock: 1 },
                 {
                     where: { id, stock: { [Op.gt]: 0 } },
-                }
+                },
             );
             // buy[0][1] : jumlah row yang ter-update
             const [[affectedRow, count]] = buy;
@@ -104,9 +103,7 @@ class Controller {
 
             cuurentStock
                 ? res.redirect("/books")
-                : res.redirect(
-                      `/books?success="${title}" is sold out&display=warning`
-                  );
+                : res.redirect(`/books?status=soldout`);
         } catch (error) {
             res.send(error);
         }
@@ -140,9 +137,7 @@ class Controller {
             const { title, isbn, stock, price, AuthorId } = req.body;
             const payload = { title, isbn, stock, price, AuthorId };
             await Book.create(payload);
-            res.redirect(
-                "/books?success=Data added successfully&display=success"
-            );
+            res.redirect("/books?status=added");
         } catch (error) {
             const errors = helper.formatValdiateErrors(error);
             if (errors) {
@@ -166,9 +161,7 @@ class Controller {
             await Book.update(payload, {
                 where: { id },
             });
-            res.redirect(
-                "/books?success=Data updated successfully&display=info"
-            );
+            res.redirect("/books?status=updated");
         } catch (error) {
             const errors = helper.formatValdiateErrors(error);
             if (errors) {
@@ -189,9 +182,7 @@ class Controller {
             const { stock } = req.body;
             const { id } = req.params;
             await Book.increment({ stock }, { where: { id } });
-            res.redirect(
-                `/books/emptyList?success=Stock is updated&display=info`
-            );
+            res.redirect(`/books/emptyList?status=stockUpdated`);
         } catch (error) {
             res.send(error);
         }
@@ -202,9 +193,7 @@ class Controller {
             const foundBook = await Book.findByPk(id);
             if (!foundBook) throw new Error(`Data not found!`);
             await foundBook.destroy();
-            res.redirect(
-                `/books/emptyList?success="${foundBook.title}" book is deleted&display=danger`
-            );
+            res.redirect(`/books/emptyList?status=deleted`);
         } catch (error) {
             res.send(error);
         }
